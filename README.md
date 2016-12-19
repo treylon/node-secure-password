@@ -2,6 +2,7 @@
 
 ## Installation
 
+[Using npm:](https://www.npmjs.com/package/node-secure-password)
 ```
 $ npm install --save node-secure-password
 ```
