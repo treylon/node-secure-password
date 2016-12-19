@@ -1,31 +1,12 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) {
-                try {
-                    step(generator.next(value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function rejected(value) {
-                try {
-                    step(generator["throw"](value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function step(result) {
-                result.done ? resolve(result.value) : new P(function (resolve) {
-                        resolve(result.value);
-                    }).then(fulfilled, rejected);
-            }
-
-            step((generator = generator.apply(thisArg, _arguments)).next());
-        });
-    };
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments)).next());
+    });
+};
 const crypto_1 = require("crypto");
 /**
  * Default salt length
@@ -56,8 +37,8 @@ const DIGEST = 'sha512';
  * @param   {string?}   param.saltLength - Length of salt in characters
  * @return  {Promise<string>} Returns password storage literal
  */
-function hashPassword({password, salt, iterations = ITERATIONS, digest = DIGEST, passwordHashLength = PASSWORD_HASH_LENGTH, saltLength = SALT_LENGTH,}) {
-    return __awaiter(this, void 0, void 0, function*() {
+function hashPassword({ password, salt, iterations = ITERATIONS, digest = DIGEST, passwordHashLength = PASSWORD_HASH_LENGTH, saltLength = SALT_LENGTH, }) {
+    return __awaiter(this, void 0, void 0, function* () {
         if (!salt) {
             salt = yield generateSalt(saltLength);
         }
@@ -81,7 +62,7 @@ exports.hashPassword = hashPassword;
  * @return  {Promise<boolean>} Returns if plain password equals the hashed password in the password storage literal
  */
 function comparePasswordWithHash(plainPassword, passwordStorageLiteral) {
-    return __awaiter(this, void 0, void 0, function*() {
+    return __awaiter(this, void 0, void 0, function* () {
         const parts = passwordStorageLiteral.split(':');
         if (parts.length !== 4 || isNaN(Number.parseInt(parts[1]))) {
             throw new Error('Passed in Hash is formatted wrongly');
@@ -100,36 +81,28 @@ function comparePasswordWithHash(plainPassword, passwordStorageLiteral) {
 exports.comparePasswordWithHash = comparePasswordWithHash;
 // Generates a hex salt of the given length
 function generateSalt(length) {
-    return new Promise((resolve, reject) = > {
-            crypto_1.randomBytes(length / 2, (err, buf) = > {
+    return new Promise((resolve, reject) => {
+        crypto_1.randomBytes(length / 2, (err, buf) => {
             if (err) {
                 reject(err);
             }
             else {
-                resolve(buf.toString('hex')
-)
-    ;
-}
-})
-    ;
-})
-    ;
+                resolve(buf.toString('hex'));
+            }
+        });
+    });
 }
 // Generating a pbkdf2 hashed hex password
-function generatePBKDF2_HEX({password, salt, iterations, passwordHashLength, digest,}) {
-    return new Promise((resolve, reject) = > {
-            crypto_1.pbkdf2(password, salt, iterations, passwordHashLength / 2, digest, (err, derivedKey) = > {
+function generatePBKDF2_HEX({ password, salt, iterations, passwordHashLength, digest, }) {
+    return new Promise((resolve, reject) => {
+        crypto_1.pbkdf2(password, salt, iterations, passwordHashLength / 2, digest, (err, derivedKey) => {
             if (err) {
                 reject(err);
             }
             else {
-                resolve(derivedKey.toString('hex')
-)
-    ;
-}
-})
-    ;
-})
-    ;
+                resolve(derivedKey.toString('hex'));
+            }
+        });
+    });
 }
 //# sourceMappingURL=encryption.js.map
