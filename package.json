@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "node-secure-password",
   "description": "A simple library for correctly storing and handling passwords on the server in a secure manner",
   "author": "Lukas Kuehnert / treylon",
