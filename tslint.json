@@ -1,0 +1,14 @@
+{
+  "extends": "tslint:latest",
+  "rules": {
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape"
+    ],
+    "no-consecutive-blank-lines": [
+      true,
+      2
+    ]
+  }
+}
