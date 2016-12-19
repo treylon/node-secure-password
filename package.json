@@ -2,6 +2,10 @@
   "version": "0.1.0",
   "name": "node-secure-password",
   "description": "A simple library for correctly storing and handling passwords on the server in a secure manner",
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/treylon/node-secure-password"
+  },
   "keywords": [
     "node",
     "password",
