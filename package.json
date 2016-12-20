@@ -1,6 +1,6 @@
 {
   "name": "node-secure-password",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A simple library for correctly storing and handling passwords on the server in a secure manner",
   "author": "Lukas Kuehnert / treylon",
   "repository": {
@@ -19,17 +19,12 @@
   "types": "dist/lib/main.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-
     "lint": "tslint 'test/*.ts lib/*.ts'",
-
     "build": "tsc",
     "build:watch": "npm run build -- -w",
-
     "test": "mocha dist/test",
     "test:watch": "npm run test -- -w",
-
     "prepare-publish": "npm run lint && npm run clean && npm run build && npm run test",
-
     "develop": "concurrently \"npm run build:watch\" \"npm run test:watch\" \"nodemon dist/lib/main.js\""
   },
   "devDependencies": {
