@@ -1,4 +1,4 @@
-import { pbkdf2, randomBytes } from 'crypto';
+import { getHashes, pbkdf2, randomBytes } from 'crypto';
 
 
 /**
@@ -20,6 +20,16 @@ const ITERATIONS = 25000;
  * Default digest to use for hashing
  */
 const DIGEST = 'sha512';
+
+/**
+ * Check if passed in digest is available
+ *
+ * @param  {string} digest - Digest which should be checked for validity
+ * @return {boolean} Returns whether digest is valid
+ */
+export function isValidDigestAlgorithm(digest: string): boolean {
+    return getHashes().indexOf(digest) !== -1;
+}
 
 /**
  * Hashes password with the given options and returns a password
@@ -52,14 +62,21 @@ export async function hashPassword({
     if (!salt) {
         salt = await generateSalt(saltLength);
     }
-    const hashedPassword = await generatePBKDF2_HEX({
-        password,
-        salt,
-        iterations,
-        passwordHashLength,
-        digest,
-    });
-    return `${salt}:${iterations}:${digest}:${hashedPassword}`;
+    if (!isValidDigestAlgorithm(digest)) {
+        throw new HashError({ type: HashErrorTypes.INVALID_DIGEST_ERROR });
+    }
+    try {
+        const hashedPassword = await generatePBKDF2_HEX({
+            password,
+            salt,
+            iterations,
+            passwordHashLength,
+            digest,
+        });
+        return `${salt}:${iterations}:${digest}:${hashedPassword}`;
+    } catch (err) {
+        throw new HashError({ type: HashErrorTypes.UNKNOWN_ERROR, message: err });
+    }
 }
 
 /**
@@ -125,4 +142,24 @@ function generatePBKDF2_HEX({
             }
         });
     });
+}
+
+export class HashError {
+    public message?: string;
+    public type: HashErrorTypes;
+
+    constructor({ message, type }: HashErrorInterface) {
+        this.message = message;
+        this.type = type;
+    }
+}
+
+export enum HashErrorTypes {
+    UNKNOWN_ERROR,
+    INVALID_DIGEST_ERROR,
+}
+
+export interface HashErrorInterface {
+    message?: string;
+    type: HashErrorTypes;
 }

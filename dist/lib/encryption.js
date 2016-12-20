@@ -25,6 +25,16 @@ const ITERATIONS = 25000;
  */
 const DIGEST = 'sha512';
 /**
+ * Check if passed in digest is available
+ *
+ * @param  {string} digest - Digest which should be checked for validity
+ * @return {boolean} Returns whether digest is valid
+ */
+function isValidDigestAlgorithm(digest) {
+    return crypto_1.getHashes().indexOf(digest) !== -1;
+}
+exports.isValidDigestAlgorithm = isValidDigestAlgorithm;
+/**
  * Hashes password with the given options and returns a password
  * storage literal of the format: "SALT:ITERATIONS:DIGEST:PASSWORD_HASH"
  *
@@ -42,14 +52,22 @@ function hashPassword({ password, salt, iterations = ITERATIONS, digest = DIGEST
         if (!salt) {
             salt = yield generateSalt(saltLength);
         }
-        const hashedPassword = yield generatePBKDF2_HEX({
-            password,
-            salt,
-            iterations,
-            passwordHashLength,
-            digest,
-        });
-        return `${salt}:${iterations}:${digest}:${hashedPassword}`;
+        if (!isValidDigestAlgorithm(digest)) {
+            throw new HashError({ type: HashErrorTypes.INVALID_DIGEST_ERROR });
+        }
+        try {
+            const hashedPassword = yield generatePBKDF2_HEX({
+                password,
+                salt,
+                iterations,
+                passwordHashLength,
+                digest,
+            });
+            return `${salt}:${iterations}:${digest}:${hashedPassword}`;
+        }
+        catch (err) {
+            throw new HashError({ type: HashErrorTypes.UNKNOWN_ERROR, message: err });
+        }
     });
 }
 exports.hashPassword = hashPassword;
@@ -105,4 +123,16 @@ function generatePBKDF2_HEX({ password, salt, iterations, passwordHashLength, di
         });
     });
 }
+class HashError {
+    constructor({ message, type }) {
+        this.message = message;
+        this.type = type;
+    }
+}
+exports.HashError = HashError;
+var HashErrorTypes;
+(function (HashErrorTypes) {
+    HashErrorTypes[HashErrorTypes["UNKNOWN_ERROR"] = 0] = "UNKNOWN_ERROR";
+    HashErrorTypes[HashErrorTypes["INVALID_DIGEST_ERROR"] = 1] = "INVALID_DIGEST_ERROR";
+})(HashErrorTypes = exports.HashErrorTypes || (exports.HashErrorTypes = {}));
 //# sourceMappingURL=encryption.js.map

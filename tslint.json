@@ -9,6 +9,10 @@
     "no-consecutive-blank-lines": [
       true,
       2
+    ],
+    "interface-name": [
+      true,
+      "never-prefix"
     ]
   }
 }

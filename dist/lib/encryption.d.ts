@@ -1,4 +1,11 @@
 /**
+ * Check if passed in digest is available
+ *
+ * @param  {string} digest - Digest which should be checked for validity
+ * @return {boolean} Returns whether digest is valid
+ */
+export declare function isValidDigestAlgorithm(digest: string): boolean;
+/**
  * Hashes password with the given options and returns a password
  * storage literal of the format: "SALT:ITERATIONS:DIGEST:PASSWORD_HASH"
  *
@@ -28,3 +35,16 @@ export declare function hashPassword({password, salt, iterations, digest, passwo
  * @return  {Promise<boolean>} Returns if plain password equals the hashed password in the password storage literal
  */
 export declare function comparePasswordWithHash(plainPassword: string, passwordStorageLiteral: string): Promise<boolean>;
+export declare class HashError {
+    message?: string;
+    type: HashErrorTypes;
+    constructor({message, type}: HashErrorInterface);
+}
+export declare enum HashErrorTypes {
+    UNKNOWN_ERROR = 0,
+    INVALID_DIGEST_ERROR = 1,
+}
+export interface HashErrorInterface {
+    message?: string;
+    type: HashErrorTypes;
+}
