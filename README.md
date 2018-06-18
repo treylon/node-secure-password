@@ -1,4 +1,4 @@
-#[Node Secure Password](https://github.com/treylon/node-secure-password)
+# [Node Secure Password](https://github.com/treylon/node-secure-password)
 
 ## Installation
 
